@@ -1,0 +1,282 @@
+Q1. Write a SQL statement to create a table country with fields country_id, country_name and region_id. Insert 2 records in the table and display the table. Then delete one record from the table.sudo apt-get update
+Code : CREATE TABLE country (
+  country_id INT PRIMARY KEY,
+  country_name VARCHAR(50),
+  region_id INT
+);
+
+INSERT INTO country (country_id, country_name, region_id)
+VALUES
+  (1, 'INDIA', 1818),
+  (2, 'RUSSIA', 1919);
+
+SELECT * FROM country;
+
+DELETE FROM country WHERE country_id = 2;
+----------------------------------------------------------------------------------------------------------------------------
+Q2. Write a SQL statement to create a table Student with fields roll-no, name and  marks. Insert 3 records in the table and arrange the records in ascending order. Display the table 
+
+Code :
+CREATE TABLE Student (
+  roll_no INT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT
+);
+
+INSERT INTO Student (roll_no, name, marks)
+VALUES
+  (273, 'kk', 80),
+  (240, 'Rahul', 90),
+  (275, 'Rohan', 85);
+
+SELECT * FROM Student ORDER BY roll_no ASC;
+----------------------------------------------------------------------------------------------------------------------------
+Q3. Write a SQL statement to create a table Department with fields did,dname,location .
+•	Create a table Employee with fields emp_id, ename, salary and did as foreign key.
+•	Describe(This will display information about the table's columns and data types.)   both tables and  insert one record in each table.
+Code :
+CREATE TABLE Department (
+  did INT PRIMARY KEY,
+  dname VARCHAR(50),
+  location VARCHAR(50)
+);
+
+CREATE TABLE Employee (
+  emp_id INT PRIMARY KEY,
+  ename VARCHAR(50),
+  salary DECIMAL(10,2),
+  did INT,
+  FOREIGN KEY (did) REFERENCES Department(did)
+);
+
+DESCRIBE Department;
+DESCRIBE Employee;
+INSERT INTO Department (did, dname, location)
+VALUES
+  (1, 'Sales', 'New York');
+
+INSERT INTO Employee (emp_id, ename, salary, did)
+VALUES
+  (1, 'John', 50000, 1);
+-----------------------------------------------------------------------------------------------------
+Q4. Write a SQL statement to create a table Book with fields book_id as a primary key, book_name , author and publisher. Insert 2 records in the table and display the table. Display those  book details whose book_name which starts with letter D. 
+Code : CREATE TABLE Book (
+  book_id INT PRIMARY KEY,
+  book_name VARCHAR(50),
+  author VARCHAR(50),
+  publisher VARCHAR(50)
+);
+
+INSERT INTO Book (book_id, book_name, author, publisher)
+VALUES
+  (1, 'Discrete Mathematics ', 'Chakraborty & Sarkar ', 'Oxford'),
+  (2, 'Operating Systems ', 'Dhananjay M. Dhamdhere ', 'McGraw Hill ');
+
+SELECT * FROM Book;
+
+SELECT * FROM Book WHERE book_name LIKE 'D%';
+-------------------------------------------------------------------------------------------------------
+Q5. Create employee  table with following fields.	
+
+Emp_No	No. (6) primary key
+EName	VARCHAR (30)
+Job	VARCHAR (50)
+Dept_No	INT
+Salary	INT
+
+Modify the column job of employee table with new size 20.
+Code : 
+
+
+
+CREATE TABLE Employee (
+  Emp_No INT(6) PRIMARY KEY,
+  EName VARCHAR(30),
+  Job VARCHAR(50),
+  Dept_No INT,
+  Salary INT
+);
+
+ALTER TABLE Employee MODIFY COLUMN Job VARCHAR(20);
+
+DESCRIBE Employee;
+-------------------------------------------------------------------------------------------------------------
+
+Q6. Create employee table with following fields.
+Emp_No No. (6) primary key
+EName VARCHAR (20)
+Job VARCHAR (30)
+Dept_No INT
+Salary INT
+Add a column experience to the emp table and describe the table structure.
+code:
+-- Create employee table
+CREATE TABLE employee (
+    Emp_No INT(6) PRIMARY KEY,
+    EName VARCHAR(20),
+    Job VARCHAR(30),
+    Dept_No INT,
+    Salary INT
+);
+
+-- Add Experience column to employee table
+ALTER TABLE employee
+ADD Experience INT;
+
+-- Describe employee table
+DESCRIBE employee;
+------------------------------------------------------------------------------------------------------------------
+Q7. . Write a SQL statement to create a table Student with fields roll-no, name and marks . Insert 2 records in the table . Update student marks  as 70 whose roll_no is 102 . Display the table .
+Code :
+CREATE TABLE Student (
+  roll_no INT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT
+);
+
+INSERT INTO Student (roll_no, name, marks)
+VALUES (101, 'John Doe', 80),
+       (102, 'Jane Smith', 90);
+
+UPDATE Student SET marks = 70 WHERE roll_no = 102;
+
+SELECT * FROM Student;
+---------------------------------------------------------------------------------------------------------------------------
+Q8. For bank database
+•	Create table Depositor with fields customer_name and account_no.
+•	Create table borrower with fields customer_name and loan_no.
+            Insert 2 records in each table.
+•	Display Customer names who are having an account in a bank and who have also               taken loan from a bank.
+
+Code: CREATE TABLE Depositor (
+  customer_name VARCHAR(50),
+  account_no INT
+);
+
+CREATE TABLE Borrower (
+  customer_name VARCHAR(50),
+  loan_no INT
+);
+
+INSERT INTO Depositor (customer_name, account_no)
+VALUES ('John Doe', 123456),
+       ('Jane Smith', 789012);
+
+INSERT INTO Borrower (customer_name, loan_no)
+VALUES ('John Doe', 1001),
+       ('Bob Johnson', 1002);
+
+SELECT Depositor.customer_name
+FROM Depositor
+INNER JOIN Borrower ON Depositor.customer_name = Borrower.customer_name;
+
+---------------------------------------------------------------------------------------------------------------------------------
+Q9. Write a SQL statement to create a table Student with fields roll-no, name and  marks . Insert 3 records in the table . Apply aggregate functions on marks column and display the resultant tables.
+Code :
+CREATE TABLE Student (
+  roll_no INT PRIMARY KEY,
+  name VARCHAR(50),
+  marks INT
+);
+
+INSERT INTO Student (roll_no, name, marks)
+VALUES (101, 'John Doe', 80),
+       (102, 'Jane Smith', 90),
+       (103, 'Bob Johnson', 75);
+
+SELECT COUNT(marks) AS total_count,
+       SUM(marks) AS total_sum,
+       AVG(marks) AS average,
+       MIN(marks) AS minimum,
+       MAX(marks) AS maximum
+FROM Student;
+-----------------------------------------------------------------------------------------------------------------------------------
+Q10.  For bank database
+•	Create table Depositor with fields customer_name and account_no.
+•	Create table borrower with fields customer_name and loan_no.
+            Insert 2 records in each table.
+•	Execute Inner join operaton and display the result.
+
+Code : CREATE TABLE Depositor (
+  customer_name VARCHAR(50),
+  account_no INT
+);
+
+CREATE TABLE Borrower (
+  customer_name VARCHAR(50),
+  loan_no INT
+);
+
+INSERT INTO Depositor (customer_name, account_no)
+VALUES ('John Doe', 1001),
+       ('Jane Smith', 1002);
+
+INSERT INTO Borrower (customer_name, loan_no)
+VALUES ('John Doe', 2001),
+       ('Bob Johnson', 2002);
+
+SELECT *
+FROM Depositor
+INNER JOIN Borrower
+ON Depositor.customer_name = Borrower.customer_name;
+--------------------------------------------------------------------------------------------------------------------------------
+Q11. For bank database
+•	Create table Depositor with fields customer_name and account_no.
+•	Create table borrower with fields customer_name and loan_no.
+            Insert 2 records in each table.
+•	Execute Left outer join operaton and display the result.
+Code : CREATE TABLE Depositor (
+  customer_name VARCHAR(50),
+  account_no INT
+);
+
+CREATE TABLE Borrower (
+  customer_name VARCHAR(50),
+  loan_no INT
+);
+
+INSERT INTO Depositor (customer_name, account_no)
+VALUES ('John Smith', 123456), ('Jane Doe', 789012);
+
+INSERT INTO Borrower (customer_name, loan_no)
+VALUES ('John Smith', 1001), ('Jane Doe', 1002);
+
+SELECT Depositor.customer_name, Depositor.account_no, Borrower.loan_no
+FROM Depositor
+LEFT OUTER JOIN Borrower ON Depositor.customer_name = Borrower.customer_name;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q12.  For bank database
+•	Create table Depositor with fields customer_name and account_no.
+•	Create table borrower with fields customer_name and loan_no.
+            Insert 2 records in each table.
+•	Execute right outer join operaton and display the result.
+
+Code : CREATE TABLE Depositor (
+  customer_name VARCHAR(50),
+  account_no INT
+);
+
+CREATE TABLE Borrower (
+  customer_name VARCHAR(50),
+  loan_no INT
+);
+
+
+INSERT INTO Depositor (customer_name, account_no)
+VALUES ('John Smith', 123456), ('Jane Doe', 789012);
+
+INSERT INTO Borrower (customer_name, loan_no)
+VALUES ('John Smith', 1001), ('Jane Doe', 1002);
+
+SELECT Depositor.customer_name, Depositor.account_no, Borrower.loan_no
+FROM Borrower
+RIGHT OUTER JOIN Depositor ON Borrower.customer_name = Depositor.customer_name;
+
+------------------------------------------------------------------------------------------------------------------------------------
+Q13.  Select any database application .Write detail problem definition & analyze it by identifying ENTITIES, ATTRIBUTES and their  RELATIONSHIPS.
+•	Draw a detailed E-R diagram and add Extended features in the  diagram.
+•	 Convert E-R / EER model  to Relational Models (tables).
+
+
+
