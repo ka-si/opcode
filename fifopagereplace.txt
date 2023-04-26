@@ -1,0 +1,69 @@
+ Write a program in C to demonstrate the FIFO page replacement algorithm for handling page faults
+
+
+
+
+
+
+
+#include <stdio.h>
+
+#define FRAME_SIZE 3 // number of frames in memory
+#define PAGE_SIZE 50 // maximum number of pages in the reference string
+
+int main() {
+    int reference_string[PAGE_SIZE]; // reference string
+    int frames[FRAME_SIZE]; // frames in memory
+    int frame_counter = 0; // current frame index
+    int page_faults = 0; // number of page faults
+    int i, j, k;
+
+    // get input from user for the reference string
+    printf("Enter the number of pages in the reference string (maximum %d): ", PAGE_SIZE);
+    int num_pages;
+    scanf("%d", &num_pages);
+    printf("Enter the reference string:\n");
+    for (i = 0; i < num_pages; i++) {
+        scanf("%d", &reference_string[i]);
+    }
+
+    // initialize frames in memory to -1 (indicating no page is stored)
+    for (i = 0; i < FRAME_SIZE; i++) {
+        frames[i] = -1;
+    }
+
+    // iterate through the reference string
+    for (i = 0; i < num_pages; i++) {
+        // check if the page is already in memory
+        int page_found = 0;
+        for (j = 0; j < FRAME_SIZE; j++) {
+            if (frames[j] == reference_string[i]) {
+                page_found = 1;
+                break;
+            }
+        }
+
+        // if the page is not already in memory, replace the oldest page with the new page
+        if (!page_found) {
+            frames[frame_counter] = reference_string[i];
+            frame_counter = (frame_counter + 1) % FRAME_SIZE;
+            page_faults++;
+        }
+
+        // display the current state of memory after each page reference
+        printf("Page reference: %d, Memory state: [ ", reference_string[i]);
+        for (k = 0; k < FRAME_SIZE; k++) {
+            if (frames[k] == -1) {
+                printf("- ");
+            } else {
+                printf("%d ", frames[k]);
+            }
+        }
+        printf("]\n");
+    }
+
+    // display the number of page faults
+    printf("Number of page faults: %d\n", page_faults);
+
+    return 0;
+}

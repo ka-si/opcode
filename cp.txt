@@ -1,0 +1,48 @@
+2. Implement cp command
+
+
+
+#!/bin/bash
+# check if source and destination file/directory are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Usage: $0 source_file_or_directory destination_file_or_directory"
+  exit 1
+fi
+
+# check if source file/directory exists
+if [ ! -e "$1" ]; then
+  echo "$1 does not exist."
+  exit 1
+fi
+
+# check if source and destination are the same
+if [ "$1" -ef "$2" ]; then
+  echo "Source and destination are the same."
+  exit 1
+fi
+
+# check if source is a directory
+if [ -d "$1" ]; then
+  # create destination directory if it doesn't exist
+  if [ ! -d "$2" ]; then
+    mkdir -p "$2"
+  fi
+  # copy all files and directories recursively
+  cp -r "$1"/* "$2"
+else
+  # copy the file
+  cp "$1" "$2"
+fi
+
+echo "File(s) copied successfully."
+
+
+
+
+
+./cp.sh source_file_or_directory destination_file_or_directory
+
+
+
+
+./cp.sh myfile.txt backup/myfile.txt

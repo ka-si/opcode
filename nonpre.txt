@@ -1,0 +1,48 @@
+//fcfs
+#include <stdio.h>
+
+int main() {
+    int n, AT[10], BT[10], WT[10], TT[10];
+    int b = 0, cmpl_T;
+    float AvgWT = 0, AvgTT = 0;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter arrival time and burst time for each process:\n");
+    for(int i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d %d", &AT[i], &BT[i]);
+    }
+
+    // Calculate waiting time for each process
+    for(int i = 0; i < n; i++) {
+        if(i == 0) {
+            WT[i] = 0;
+        } else {
+            WT[i] = b - AT[i];
+        }
+        b += BT[i];
+        AvgWT += WT[i];
+    }
+    AvgWT /= n;
+
+    // Calculate turnaround time for each process
+    cmpl_T = 0;
+    for(int i = 0; i < n; i++) {
+        cmpl_T += BT[i];
+        TT[i] = cmpl_T - AT[i];
+        AvgTT += TT[i];
+    }
+    AvgTT /= n;
+
+    // Print results
+    printf("\nProcess\tWT\tTT\n");
+    for(int i = 0; i < n; i++) {
+        printf("%d\t%d\t%d\n", i + 1, WT[i], TT[i]);
+    }
+    printf("\nAverage waiting time: %f", AvgWT);
+    printf("\nAverage turnaround time: %f", AvgTT);
+
+    return 0;
+}
