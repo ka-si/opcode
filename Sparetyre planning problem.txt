@@ -1,0 +1,22 @@
+def generate_spare_type_sequence(start, diff1, diff2, length):
+
+  sequence = [start]
+  current_diff = diff1
+
+  for _ in range(length - 1):
+    next_term= sequence[-1] + current_diff
+    sequence.append(next_term)
+    current_diff = diff2 if current_diff == diff1 else diff1
+  
+  return sequence
+
+def main():
+  start = int(input("Enter the starting term: "))
+  diff1= int(input("Enter the first difference: "))
+  diff2 = int(input("Enter the second difference: "))
+  length = int(input("Enter the length of the sequence: "))
+  sequence = generate_spare_type_sequence(start, diff1, diff2, length)
+  print("Spare-Type Sequence:", sequence)
+
+if __name__ == "__main__":
+  main()
