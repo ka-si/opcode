@@ -1,0 +1,212 @@
+Aim: Use SMOTE technique to generate synthetic data on diabetic dataset. Comment on the F1-score values before and after SMOTE.
+
+✅ THEORY
+🔹 What is SMOTE?
+SMOTE stands for Synthetic Minority Over-sampling Technique. It is used to address class imbalance in datasets — especially in classification problems where one class significantly outnumbers the other (e.g., diabetic vs non-diabetic).
+
+Instead of duplicating minority class examples, SMOTE generates new synthetic examples by:
+
+Choosing a minority class sample
+
+Finding its k nearest neighbors (usually 5)
+
+Randomly selecting one of them
+
+Creating a synthetic point between the original and neighbor point
+
+🔍 This helps improve model generalization and avoid overfitting that happens with simple oversampling.
+
+🔹 Why Class Imbalance is a Problem?
+Imbalanced datasets can lead to:
+
+High accuracy but poor performance on the minority class
+
+Classifier becoming biased toward the majority class
+
+This is where F1-score becomes critical.
+
+🔹 F1-Score
+The F1-score is the harmonic mean of precision and recall:
+
+
+
+F1=2× 
+Precision+Recall
+Precision⋅Recall
+​
+ 
+Precision: How many predicted positives are actually positive?
+
+Recall: How many actual positives were predicted correctly?
+
+📌 F1-score is ideal for imbalanced classification problems, because it balances false positives and false negatives.
+
+✅ IMPLEMENTATION STEPS
+Step 1: Load the Diabetic Dataset
+Use datasets like Pima Indians Diabetes dataset (popular for this use case).
+
+Step 2: Preprocess the Data
+Handle nulls, scale features if needed, and split into features (X) and target (y).
+
+Step 3: Split into Train-Test
+Step 4: Train a Classifier (e.g., Logistic Regression or Random Forest)
+Step 5: Evaluate Model (before SMOTE) using F1-score
+Step 6: Apply SMOTE on training data
+Use imblearn.over_sampling.SMOTE to generate synthetic samples.
+
+Step 7: Retrain Classifier on Balanced Data
+Step 8: Re-evaluate F1-score on test set
+✅ PSEUDO CODE (Python Style)
+python
+Copy code
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import f1_score, classification_report
+from imblearn.over_sampling import SMOTE
+
+# Step 1: Load Dataset
+df = pd.read_csv("diabetes.csv")
+
+# Step 2: Preprocessing
+X = df.drop("Outcome", axis=1)
+y = df["Outcome"]
+
+# Step 3: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.3, random_state=42)
+
+# Step 4: Train classifier on original data
+clf = RandomForestClassifier(random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+# Step 5: Evaluate before SMOTE
+print("Before SMOTE F1-Score:", f1_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+# Step 6: Apply SMOTE
+sm = SMOTE(random_state=42)
+X_train_sm, y_train_sm = sm.fit_resample(X_train, y_train)
+
+# Step 7: Retrain on SMOTE data
+clf_sm = RandomForestClassifier(random_state=42)
+clf_sm.fit(X_train_sm, y_train_sm)
+y_pred_sm = clf_sm.predict(X_test)
+
+# Step 8: Evaluate after SMOTE
+print("After SMOTE F1-Score:", f1_score(y_test, y_pred_sm))
+print(classification_report(y_test, y_pred_sm))
+✅ ANALYSIS & COMMENTS
+Before SMOTE:
+
+Likely lower F1-score for the minority class (diabetic = 1)
+
+Classifier may favor the majority class
+
+After SMOTE:
+
+Improved F1-score for minority class
+
+More balanced predictions, better generalization
+
+🗣️ “After applying SMOTE, the F1-score improved, especially for the diabetic class. This shows that the model was better able to learn the decision boundary for the minority class, reducing bias towards the majority class.”
+
+-----------------xxx-----------------------------------------------------------
+
+Code : 
+
+pip install imbalanced-learn
+
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, f1_score
+from imblearn.over_sampling import SMOTE
+
+# ------------------------------
+# LOADING DATA
+# ------------------------------
+
+# Option 1: Load diabetes dataset from a URL
+# (Here's a commonly used diabetes dataset from UCI hosted on GitHub)
+url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv'
+
+try:
+    diabetes_data_url = pd.read_csv(url, header=None)
+    print("Data loaded from URL.\n")
+except Exception as e:
+    print("Failed to load from URL:", e)
+
+# Option 2: Load diabetes dataset from local CSV file
+try:
+    diabetes_data_csv = pd.read_csv('diabetes.csv')
+    print("Data loaded from local file.\n")
+except Exception as e:
+    print("Failed to load from CSV:", e)
+
+# For this code, we'll use the data from URL (or switch if needed)
+# Assign column names for the UCI Pima dataset
+columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 
+           'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+diabetes_data = diabetes_data_url.copy()
+diabetes_data.columns = columns
+
+# ------------------------------
+# SPLITTING DATA
+# ------------------------------
+
+# Separate features and target
+X = diabetes_data.drop('Outcome', axis=1)
+y = diabetes_data['Outcome']
+
+# Train-test split (before SMOTE)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+# ------------------------------
+# TRAINING BEFORE SMOTE
+# ------------------------------
+
+# Train a model before applying SMOTE
+clf_before = RandomForestClassifier(random_state=42)
+clf_before.fit(X_train, y_train)
+y_pred_before = clf_before.predict(X_test)
+
+# Evaluate F1-score before SMOTE
+f1_before = f1_score(y_test, y_pred_before)
+print("\nF1-score BEFORE applying SMOTE:", round(f1_before, 4))
+
+# ------------------------------
+# APPLYING SMOTE
+# ------------------------------
+
+# Apply SMOTE to training data
+sm = SMOTE(random_state=42)
+X_resampled, y_resampled = sm.fit_resample(X_train, y_train)
+
+# ------------------------------
+# TRAINING AFTER SMOTE
+# ------------------------------
+
+# Train the same model on SMOTE-resampled data
+clf_after = RandomForestClassifier(random_state=42)
+clf_after.fit(X_resampled, y_resampled)
+y_pred_after = clf_after.predict(X_test)
+
+# Evaluate F1-score after SMOTE
+f1_after = f1_score(y_test, y_pred_after)
+print("F1-score AFTER applying SMOTE:", round(f1_after, 4))
+
+# ------------------------------
+# COMPARISON & COMMENT
+# ------------------------------
+
+if f1_after > f1_before:
+    print("\n✅ SMOTE improved the F1-score, suggesting better balance and generalization.")
+else:
+    print("\n⚠️ SMOTE did not improve the F1-score. Model may already be well-balanced or overfitting post-SMOTE.")
+
+# Optional: Print classification reports
+print("\nClassification Report BEFORE SMOTE:\n", classification_report(y_test, y_pred_before))
+print("Classification Report AFTER SMOTE:\n", classification_report(y_test, y_pred_after))

@@ -1,0 +1,205 @@
+Aim: Implement and explore performance evaluation metrics for placement dataset.
+
+✅ THEORY
+🔹 Classification Problem
+In the placement dataset, the target is usually binary:
+
+Placed = 1
+
+Not Placed = 0
+
+This is a binary classification problem, and so we evaluate model performance using classification metrics.
+
+🔹 Key Classification Metrics
+Accuracy
+
+Accuracy=  (TP+TN)/(TP+TN+FP+FN)
+
+​
+ 
+Proportion of correct predictions.
+
+Precision
+
+Precision= (TP)/(TP+FP)
+
+​
+ 
+Out of predicted placed, how many were actually placed?
+
+Recall (Sensitivity)
+
+Recall= (TP)/(TP+FN)
+​
+ 
+Out of all actually placed, how many were predicted?
+
+F1-Score
+Harmonic mean of precision and recall. Best for imbalanced datasets.
+
+F1=2× (Precision⋅Recall)/(Precision+Recall)
+
+​
+ 
+Confusion Matrix
+Summarizes TP, TN, FP, FN.
+
+ROC Curve & AUC Score
+Evaluates model's performance across thresholds.
+
+✅ IMPLEMENTATION STEPS
+Load and explore the placement dataset
+
+Clean and preprocess data (e.g., encoding, scaling)
+
+Train-test split
+
+Train a classifier (e.g., Logistic Regression)
+
+Predict and calculate metrics
+
+Visualize confusion matrix and ROC curve
+
+✅ PSEUDO CODE (Python Style)
+python
+Copy code
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_auc_score, roc_curve
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load dataset
+df = pd.read_csv("placement.csv")  # Assuming this has a 'status' column for placement
+
+# Step 2: Encode categorical and preprocess
+df = df.dropna()
+label_encoders = {}
+for col in df.select_dtypes(include=['object']).columns:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col])
+    label_encoders[col] = le
+
+# Step 3: Define features and target
+X = df.drop('status', axis=1)
+y = df['status']  # 1 = Placed, 0 = Not Placed
+
+# Step 4: Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.2, random_state=42)
+
+# Step 5: Train model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Step 6: Predict and evaluate
+y_pred = model.predict(X_test)
+y_prob = model.predict_proba(X_test)[:, 1]
+
+# Step 7: Metrics
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Precision:", precision_score(y_test, y_pred))
+print("Recall:", recall_score(y_test, y_pred))
+print("F1-Score:", f1_score(y_test, y_pred))
+print("AUC Score:", roc_auc_score(y_test, y_prob))
+
+# Step 8: Confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+# Step 9: ROC Curve
+fpr, tpr, _ = roc_curve(y_test, y_prob)
+plt.plot(fpr, tpr, color='darkorange')
+plt.plot([0, 1], [0, 1], 'k--')
+plt.title("ROC Curve")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.grid()
+plt.show()
+
+-----------------------------xxx----------------------------------------
+
+Code : 
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# ------------------------------
+# 1. LOAD DATASET
+# ------------------------------
+
+# Option 1: Load from URL (example placement dataset)
+url = "https://raw.githubusercontent.com/omairaasim/machine-learning-datasets/main/Placement_Data_Full_Class.csv"
+
+try:
+    df = pd.read_csv(url)
+    print("✅ Dataset loaded from URL.")
+except:
+    df = pd.read_csv("placement.csv")
+    print("✅ Dataset loaded from local file.")
+
+print(df.head())
+
+# ------------------------------
+# 2. DATA PREPROCESSING
+# ------------------------------
+
+# Drop ID and non-numeric columns for simplicity (we'll handle categorical encoding next)
+df.drop(['sl_no', 'salary'], axis=1, inplace=True)
+
+# Encode categorical features
+df_encoded = pd.get_dummies(df, drop_first=True)
+
+# Display columns
+print("\n🎯 Features after encoding:\n", df_encoded.columns.tolist())
+
+# Split features and target
+X = df_encoded.drop('status_Placed', axis=1)
+y = df_encoded['status_Placed']  # Target: 1 if placed, 0 if not placed
+
+# ------------------------------
+# 3. TRAIN-TEST SPLIT
+# ------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# ------------------------------
+# 4. TRAIN MODEL
+# ------------------------------
+
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+print("\n✅ Model trained.")
+
+# ------------------------------
+# 5. EVALUATE MODEL
+# ------------------------------
+
+y_pred = model.predict(X_test)
+
+# Accuracy
+acc = accuracy_score(y_test, y_pred)
+print(f"\n✅ Accuracy: {round(acc, 3)}")
+
+# Classification Report
+print("\n📊 Classification Report:\n", classification_report(y_test, y_pred))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()

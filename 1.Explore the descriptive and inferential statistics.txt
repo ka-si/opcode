@@ -1,0 +1,208 @@
+---------------xxx-------------------------------
+Aim: Explore the descriptive (mean, median, minimum, maximum, standard deviation) and inferential statistics on the Olympic dataset.
+
+✅ THEORY
+🔹 Descriptive Statistics
+Descriptive statistics summarize and organize characteristics of a dataset. They are divided into measures of central tendency and measures of dispersion:
+
+Mean: The average of the data.
+
+Mean
+=
+∑
+𝑥
+𝑖
+𝑛
+Mean= 
+n
+∑x 
+i
+​ 
+Median: The middle value when the data is sorted. It is not affected by outliers.
+
+Minimum and Maximum: The smallest and largest values in the dataset, indicating range boundaries.
+
+Standard Deviation (σ): Measures how spread out the numbers are from the mean. A high std means high variability.
+
+📌 These are helpful for understanding what the data looks like — average performance, common values, spread, and extremes.
+
+🔹 Inferential Statistics
+Inferential statistics allow us to draw conclusions about a population based on sample data. It includes:
+
+Confidence Intervals: Range in which we expect the true population parameter to fall.
+
+Hypothesis Testing: Helps test assumptions (null and alternate hypotheses).
+
+T-tests or Z-tests: Compare means across groups.
+
+ANOVA (Analysis of Variance): Compares means of more than two groups.
+
+Correlation & Regression: Check relationships between variables.
+
+📌 These help answer why or how the data behaves a certain way — like whether athletes from different countries perform differently on average.
+
+✅ IMPLEMENTATION STEPS
+Step 1: Load the Dataset
+Use pandas to read the Olympic dataset (assume it's in CSV format).
+
+Step 2: Understand the Dataset
+Check for:
+
+Null values
+
+Data types
+
+Basic structure (columns like "Athlete", "Country", "Sport", "Age", "Height", "Weight", "Medals")
+
+Step 3: Apply Descriptive Statistics
+Use:
+
+.mean()
+
+.median()
+
+.min(), .max()
+
+.std() on relevant numerical columns like Age, Height, Weight, etc.
+
+Step 4: Apply Inferential Statistics
+Examples:
+
+Use t-tests to compare Age or Height of gold vs. non-gold medalists.
+
+Use correlation to check relation between Height and Weight.
+
+Build a confidence interval for average athlete age.
+
+✅ PSEUDO CODE (Python Style)
+python
+Copy
+Edit
+import pandas as pd
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load dataset
+df = pd.read_csv("olympic_dataset.csv")
+
+# Step 2: Explore data
+print(df.info())
+print(df.describe())
+print(df.isnull().sum())
+
+# Step 3: Descriptive statistics
+print("Mean age:", df['Age'].mean())
+print("Median age:", df['Age'].median())
+print("Minimum height:", df['Height'].min())
+print("Maximum height:", df['Height'].max())
+print("Standard deviation in weight:", df['Weight'].std())
+
+# Step 4: Inferential statistics
+
+# 4.1: T-test between gold medalists and non-gold medalists (for example, in Age)
+gold_medalists = df[df['Medal'] == 'Gold']['Age'].dropna()
+non_gold_medalists = df[df['Medal'].isnull()]['Age'].dropna()
+t_stat, p_val = stats.ttest_ind(gold_medalists, non_gold_medalists)
+print("T-test Result:", t_stat, "P-value:", p_val)
+
+# 4.2: Correlation
+correlation = df[['Height', 'Weight']].corr()
+print("Correlation between height and weight:\n", correlation)
+
+# 4.3: Confidence Interval for average age
+sample = df['Age'].dropna()
+mean_age = sample.mean()
+std_dev = sample.std()
+n = len(sample)
+conf_int = stats.norm.interval(0.95, loc=mean_age, scale=std_dev/np.sqrt(n))
+print("95% Confidence Interval for Age:", conf_int)
+
+# Optional: Visualizations
+sns.histplot(df['Age'].dropna(), kde=True)
+plt.title("Distribution of Athlete Age")
+plt.show()
+-------------------------------xxx-----------------------------------------------------------
+
+Code : 
+
+# Importing necessary libraries
+import pandas as pd                    # For data handling
+import numpy as np                     # For numerical operations
+from scipy import stats                # For inferential statistics
+
+# ------------------------------
+# LOADING DATA
+# ------------------------------
+
+# Option 1: Load the Olympic dataset from a URL
+# (Use the actual URL of your dataset; here is a sample placeholder)
+url = 'https://raw.githubusercontent.com/datablist/sample-csv-files/main/files/people/olympic_athletes.csv'
+try:
+    olympic_data_url = pd.read_csv(url)
+    print("Data successfully loaded from URL.\n")
+except Exception as e:
+    print("Error loading from URL:", e)
+
+# Option 2: Load the Olympic dataset from a local CSV file
+# (Make sure the CSV file is in the same folder or provide the full path)
+try:
+    olympic_data_csv = pd.read_csv('olympic_data.csv')
+    print("Data successfully loaded from local CSV file.\n")
+except Exception as e:
+    print("Error loading from CSV file:", e)
+
+# For this code, we'll use the data loaded from URL (or switch to CSV if needed)
+df = olympic_data_url.copy()  # or use olympic_data_csv if URL fails
+
+# Display the first few rows to understand the structure
+print("Sample Data:\n", df.head())
+
+# ------------------------------
+# DESCRIPTIVE STATISTICS
+# ------------------------------
+
+# Calculate and display mean for numerical columns
+print("\nMean:\n", df.mean(numeric_only=True))
+
+# Calculate and display median
+print("\nMedian:\n", df.median(numeric_only=True))
+
+# Calculate and display minimum values
+print("\nMinimum:\n", df.min(numeric_only=True))
+
+# Calculate and display maximum values
+print("\nMaximum:\n", df.max(numeric_only=True))
+
+# Calculate and display standard deviation
+print("\nStandard Deviation:\n", df.std(numeric_only=True))
+
+# ------------------------------
+# INFERENTIAL STATISTICS
+# ------------------------------
+
+# Example: Independent T-test between Male and Female athletes' weight
+# First, check if 'Sex' and 'Weight' columns exist
+if 'Sex' in df.columns and 'Weight' in df.columns:
+    # Drop rows with missing weight values
+    df_filtered = df.dropna(subset=['Weight'])
+
+    # Grouping the weights
+    male_weights = df_filtered[df_filtered['Sex'] == 'M']['Weight']
+    female_weights = df_filtered[df_filtered['Sex'] == 'F']['Weight']
+
+    # Perform an independent t-test
+    t_stat, p_value = stats.ttest_ind(male_weights, female_weights)
+
+    print("\nT-Test Results (Male vs Female Weights):")
+    print("T-statistic:", t_stat)
+    print("P-value:", p_value)
+
+    if p_value < 0.05:
+        print("Result: Statistically significant difference between male and female weights.")
+    else:
+        print("Result: No statistically significant difference between male and female weights.")
+else:
+    print("\nRequired columns for T-test ('Sex', 'Weight') not found in the dataset.")
+

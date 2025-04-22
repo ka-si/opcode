@@ -1,0 +1,290 @@
+To perform Exploratory Data Analysis (EDA) on the Automobile dataset, we’ll follow a structured approach. EDA helps us to understand the dataset, detect patterns, detect outliers, and check for anomalies.
+
+Let's break down the process step-by-step for the Automobile dataset. This dataset often includes various attributes such as make, price, horsepower, curb-weight, engine-size, and so on.
+
+Step-by-Step EDA Process:
+Load the Dataset
+
+Data Cleaning (handling missing values, removing duplicates)
+
+Summary Statistics
+
+Data Visualizations
+
+Distribution of numerical features
+
+Relationships between features (e.g., price vs. engine size)
+
+Categorical data analysis (e.g., count of different makes or fuel type)
+
+Outlier Detection (using Box Plots)
+
+Correlation Analysis (using Heatmaps)
+
+Python Code for EDA on the Automobile Dataset
+python
+Copy code
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Step 1: Load the dataset
+df = pd.read_csv('automobile.csv')
+
+# Step 2: Check for basic information
+print("Dataset Information:")
+print(df.info())
+
+print("\nFirst 5 rows of the dataset:")
+print(df.head())
+
+# Step 3: Data Cleaning
+
+# Handle missing values: 
+# Replace '?' with NaN to standardize missing values
+df.replace('?', np.nan, inplace=True)
+
+# Convert columns to appropriate data types
+df['price'] = pd.to_numeric(df['price'], errors='coerce')
+df['horsepower'] = pd.to_numeric(df['horsepower'], errors='coerce')
+df['curb-weight'] = pd.to_numeric(df['curb-weight'], errors='coerce')
+df['engine-size'] = pd.to_numeric(df['engine-size'], errors='coerce')
+
+# Check for missing values
+print("\nMissing values per column:")
+print(df.isnull().sum())
+
+# Fill missing numerical values with the mean (for simplicity)
+df['price'].fillna(df['price'].mean(), inplace=True)
+df['horsepower'].fillna(df['horsepower'].mean(), inplace=True)
+df['curb-weight'].fillna(df['curb-weight'].mean(), inplace=True)
+df['engine-size'].fillna(df['engine-size'].mean(), inplace=True)
+
+# Fill missing categorical values with the mode
+df['fuel-type'].fillna(df['fuel-type'].mode()[0], inplace=True)
+
+# Step 4: Summary Statistics
+print("\nSummary Statistics:")
+print(df.describe())
+
+# Step 5: Data Visualizations
+
+# 5.1: Histograms to check the distribution of numerical features
+plt.figure(figsize=(10, 6))
+df['price'].hist(bins=20)
+plt.title('Distribution of Car Price')
+plt.xlabel('Price')
+plt.ylabel('Frequency')
+plt.show()
+
+# 5.2: Box Plot to detect outliers in 'horsepower'
+plt.figure(figsize=(8, 6))
+sns.boxplot(x=df['horsepower'])
+plt.title('Box Plot of Horsepower')
+plt.show()
+
+# 5.3: Scatter plot to visualize relationship between engine-size and price
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=df['engine-size'], y=df['price'])
+plt.title('Engine Size vs. Price')
+plt.xlabel('Engine Size')
+plt.ylabel('Price')
+plt.show()
+
+# 5.4: Count plot for categorical data - 'fuel-type'
+plt.figure(figsize=(8, 6))
+sns.countplot(x='fuel-type', data=df)
+plt.title('Fuel Type Distribution')
+plt.show()
+
+# 5.5: Pair Plot to explore relationships between numerical features
+sns.pairplot(df[['price', 'horsepower', 'curb-weight', 'engine-size']])
+plt.title('Pair Plot of Numerical Features')
+plt.show()
+
+# Step 6: Outlier Detection using Z-Score
+
+# Compute Z-scores for numerical features
+z_scores = np.abs(stats.zscore(df[['price', 'horsepower', 'curb-weight', 'engine-size']]))
+outliers = (z_scores > 3).sum(axis=0)
+
+print("\nNumber of outliers in each column based on Z-score (>3):")
+print(outliers)
+
+# Step 7: Correlation Heatmap to understand relationships between numerical features
+plt.figure(figsize=(10, 8))
+correlation_matrix = df[['price', 'horsepower', 'curb-weight', 'engine-size']].corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+Explanation of Each Step:
+Load the Dataset:
+We load the Automobile dataset using pd.read_csv(). The dataset can be found in a CSV file (assuming the dataset file is named automobile.csv).
+
+Data Cleaning:
+
+We check the data types and convert columns such as price, horsepower, curb-weight, and engine-size to numeric values, handling errors with pd.to_numeric().
+
+We replace missing values (?) with NaN and then impute missing values with the mean for numerical columns and the mode for categorical columns (like fuel-type).
+
+Summary Statistics:
+The describe() method provides an overview of key statistics, including the mean, standard deviation, minimum, and maximum for numerical columns.
+
+Data Visualizations:
+
+Histogram for price to visualize the distribution of car prices.
+
+Box Plot for horsepower to detect outliers.
+
+Scatter Plot between engine-size and price to understand their relationship.
+
+Count Plot for categorical variable fuel-type to check how often each fuel type appears in the dataset.
+
+Pair Plot to examine pairwise relationships between numerical variables (price, horsepower, curb-weight, engine-size).
+
+Outlier Detection (Z-Score):
+We use the Z-score method to detect outliers, where a Z-score greater than 3 typically indicates an outlier. The stats.zscore() function computes the Z-scores for the numerical columns.
+
+Correlation Heatmap:
+We use a heatmap to display correlations between numerical features like price, horsepower, curb-weight, and engine-size. Strong correlations can help in predictive modeling.
+
+Sample Outputs:
+Dataset Summary:
+This will display the structure and data types of the dataset, and a glimpse of the first few rows.
+
+Missing Values:
+Missing data in columns will be filled with either the mean (for numerical) or mode (for categorical).
+
+Visualizations:
+
+Price Distribution: A histogram showing the spread of car prices.
+
+Box Plot: A box plot to highlight potential outliers in horsepower.
+
+Scatter Plot: A plot showing how engine-size relates to price.
+
+Correlation Heatmap: A heatmap that helps identify which features have the strongest relationships (e.g., curb-weight and engine-size).
+
+Outliers:
+Outliers based on the Z-score calculation will be shown.
+
+-------------------------------------------------xxx-----------------------------------------
+
+# Importing necessary libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# ------------------------------
+# 1. LOAD THE AUTOMOBILE DATASET
+# ------------------------------
+
+# Load the dataset
+file_path = 'path/to/your/automobile.csv'  # Replace with your actual file path
+df = pd.read_csv(file_path)
+
+# Show the first few rows of the dataset
+print("First 5 rows of the dataset:")
+print(df.head())
+
+# ------------------------------
+# 2. DATA OVERVIEW
+# ------------------------------
+
+# Check basic information about the dataset
+print("\nDataset Info:")
+print(df.info())
+
+# Summary statistics for numerical features
+print("\nSummary Statistics for Numerical Features:")
+print(df.describe())
+
+# Check for missing values
+print("\nMissing Values in the dataset:")
+print(df.isnull().sum())
+
+# ------------------------------
+# 3. UNIVARIATE VISUALIZATION (Individual Feature Analysis)
+# ------------------------------
+
+# Histogram for a numerical feature (e.g., 'price')
+plt.figure(figsize=(8, 5))
+sns.histplot(df['price'], bins=20, kde=True, color='blue')
+plt.title('Price Distribution')
+plt.xlabel('Price')
+plt.ylabel('Frequency')
+plt.tight_layout()
+plt.show()
+
+# Countplot for a categorical feature (e.g., 'fuel-type')
+plt.figure(figsize=(8, 5))
+sns.countplot(data=df, x='fuel-type', palette='Set2')
+plt.title('Fuel Type Distribution')
+plt.xlabel('Fuel Type')
+plt.ylabel('Count')
+plt.tight_layout()
+plt.show()
+
+# ------------------------------
+# 4. BIVARIATE VISUALIZATION (Comparing Two Features)
+# ------------------------------
+
+# Scatter plot between 'horsepower' and 'price'
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df, x='horsepower', y='price', color='purple')
+plt.title('Horsepower vs Price')
+plt.xlabel('Horsepower')
+plt.ylabel('Price')
+plt.tight_layout()
+plt.show()
+
+# Boxplot: Distribution of 'price' by 'body-style'
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=df, x='body-style', y='price', palette='Set3')
+plt.title('Price Distribution by Body Style')
+plt.xlabel('Body Style')
+plt.ylabel('Price')
+plt.tight_layout()
+plt.show()
+
+# ------------------------------
+# 5. MULTIVARIATE VISUALIZATION (Analyzing Multiple Features)
+# ------------------------------
+
+# Pairplot of a few numerical features
+sns.pairplot(df[['price', 'horsepower', 'curb-weight', 'engine-size']])
+plt.suptitle('Pairplot: Price, Horsepower, Curb Weight, and Engine Size', y=1.02)
+plt.tight_layout()
+plt.show()
+
+# Heatmap: Correlation matrix of numerical features
+plt.figure(figsize=(10, 6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f', linewidths=1)
+plt.title('Correlation Matrix of Numerical Features')
+plt.tight_layout()
+plt.show()
+
+# ------------------------------
+# 6. HANDLING OUTLIERS
+# ------------------------------
+
+# Let's find outliers for 'price' using IQR
+Q1 = df['price'].quantile(0.25)
+Q3 = df['price'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define the outlier range
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Find outliers in 'price'
+outliers = df[(df['price'] < lower_bound) | (df['price'] > upper_bound)]
+print("\nOutliers in 'price' column:")
+print(outliers)
+
+# Optional: Remove outliers
+df_cleaned = df[(df['price'] >= lower_bound) & (df['price'] <= upper_bound)]
+print(f"\nData after removing outliers. New shape: {df_cleaned.shape}")

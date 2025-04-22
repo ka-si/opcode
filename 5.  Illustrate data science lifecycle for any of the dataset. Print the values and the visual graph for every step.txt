@@ -1,0 +1,239 @@
+Aim: Illustrate data science lifecycle for any of the dataset. Print the values and the visual graph for every step.
+
+✅ THEORY
+🔹 Data Science Lifecycle Phases
+The Data Science Lifecycle consists of the following key steps:
+
+Data Collection – Gathering data from various sources
+
+Data Cleaning – Handling missing values, outliers, duplicates
+
+Data Exploration (EDA) – Analyzing distributions, relationships, patterns
+
+Feature Engineering – Transforming raw data into features
+
+Model Building – Applying machine learning algorithms
+
+Model Evaluation – Measuring model performance
+
+Deployment (optional) – Putting the model into production
+
+We’ll use the Diabetes dataset for illustration here.
+
+✅ IMPLEMENTATION STEPS (and GRAPH for each)
+🔹 STEP 1: DATA COLLECTION
+We load the dataset using pandas.
+
+python
+Copy code
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("diabetes.csv")
+print("First 5 rows:")
+print(df.head())
+🔹 STEP 2: DATA CLEANING
+Check for missing values and duplicates.
+
+python
+Copy code
+print("Missing values:\n", df.isnull().sum())
+print("Duplicate rows:", df.duplicated().sum())
+📊 Plot: Null values heatmap
+
+python
+Copy code
+sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
+plt.title("Null Values Heatmap")
+plt.show()
+🔹 STEP 3: DATA EXPLORATION (EDA)
+python
+Copy code
+print("Basic Statistics:\n", df.describe())
+📊 Plot: Histograms of all features
+
+python
+Copy code
+df.hist(figsize=(12, 8))
+plt.suptitle("Feature Distributions")
+plt.show()
+📊 Plot: Correlation Heatmap
+
+python
+Copy code
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title("Feature Correlation Matrix")
+plt.show()
+🔹 STEP 4: FEATURE ENGINEERING
+Example: Creating a new feature — BMI category.
+
+python
+Copy code
+df['BMI_Category'] = pd.cut(df['BMI'], bins=[0, 18.5, 25, 30, 100], labels=["Underweight", "Normal", "Overweight", "Obese"])
+print(df[['BMI', 'BMI_Category']].head())
+📊 Plot: BMI Category Count
+
+python
+Copy code
+df['BMI_Category'].value_counts().plot(kind='bar', color='skyblue')
+plt.title("BMI Category Distribution")
+plt.xlabel("BMI Category")
+plt.ylabel("Count")
+plt.show()
+🔹 STEP 5: MODEL BUILDING
+python
+Copy code
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+X = df.drop(['Outcome', 'BMI_Category'], axis=1)
+y = df['Outcome']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.3, random_state=42)
+
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+🔹 STEP 6: MODEL EVALUATION
+python
+Copy code
+from sklearn.metrics import classification_report, confusion_matrix
+
+y_pred = model.predict(X_test)
+print("Classification Report:\n", classification_report(y_test, y_pred))
+📊 Plot: Confusion Matrix
+
+python
+Copy code
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+-----------------------------------xxx-------------------------------------------------
+
+Code : 
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# For consistent visuals
+sns.set(style="whitegrid")
+
+# ------------------------------
+# 1. PROBLEM DEFINITION
+# ------------------------------
+# Can we predict whether a person has diabetes based on health features?
+
+print("🧠 Problem: Predict diabetes (binary classification)")
+
+# ------------------------------
+# 2. DATA COLLECTION / LOADING
+# ------------------------------
+
+# Load from URL
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness',
+           'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+
+df = pd.read_csv(url, header=None)
+df.columns = columns
+print("\n✅ Data loaded. Shape:", df.shape)
+
+# Show sample data
+print("\n📄 First 5 rows:\n", df.head())
+
+# ------------------------------
+# 3. DATA CLEANING
+# ------------------------------
+
+# Replace zero values in some columns with NaN, as zero is not valid
+columns_to_clean = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
+df[columns_to_clean] = df[columns_to_clean].replace(0, np.nan)
+
+# Show number of missing values
+print("\n🧹 Missing values per column:\n", df.isnull().sum())
+
+# Fill missing values with median
+df.fillna(df.median(numeric_only=True), inplace=True)
+
+# Confirm no missing values
+print("\n✅ Missing values handled. Remaining:\n", df.isnull().sum().sum())
+
+# ------------------------------
+# 4. EXPLORATORY DATA ANALYSIS (EDA)
+# ------------------------------
+
+# Summary stats
+print("\n📊 Statistical Summary:\n", df.describe())
+
+# Histogram of features
+df.hist(figsize=(12, 10), bins=20)
+plt.suptitle('Feature Distributions')
+plt.tight_layout()
+plt.show()
+
+# Correlation heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Heatmap")
+plt.show()
+
+# ------------------------------
+# 5. FEATURE ENGINEERING
+# ------------------------------
+
+# Create age group
+df['AgeGroup'] = pd.cut(df['Age'], bins=[20, 30, 40, 50, 60, 100], labels=['20s', '30s', '40s', '50s', '60+'])
+
+# Visualize diabetes rate by age group
+plt.figure(figsize=(6, 4))
+sns.barplot(data=df, x='AgeGroup', y='Outcome')
+plt.title("Diabetes Rate by Age Group")
+plt.ylabel("Proportion with Diabetes")
+plt.show()
+
+# Drop new feature before modeling (just for EDA)
+df.drop('AgeGroup', axis=1, inplace=True)
+
+# ------------------------------
+# 6. MODEL BUILDING
+# ------------------------------
+
+# Split data
+X = df.drop('Outcome', axis=1)
+y = df['Outcome']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train logistic regression
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+print("\n✅ Model trained.")
+
+# ------------------------------
+# 7. MODEL EVALUATION
+# ------------------------------
+
+# Predict and evaluate
+y_pred = model.predict(X_test)
+print("\n📈 Classification Report:\n", classification_report(y_test, y_pred))
+print("🔢 Accuracy:", accuracy_score(y_test, y_pred))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+# ------------------------------
+# 8. DEPLOYMENT (Conceptual)
+# ------------------------------
+print("\n🚀 Model can now be saved using joblib/pickle for deployment in a web app or REST API.")

@@ -1,0 +1,94 @@
+To visualize the correlation between sepal length and petal length in the Iris dataset using a scatter plot, we can follow these steps:
+
+Steps:
+Load the Iris dataset (you can use the dataset directly from seaborn or sklearn).
+
+Extract the required columns (sepal length and petal length).
+
+Plot the scatter plot to visualize the relationship between the two variables.
+
+We'll use seaborn and matplotlib for plotting the scatter plot. Seaborn also provides a quick way to load the Iris dataset directly.
+
+Python Code for Scatter Plot Between Sepal Length and Petal Length
+python
+Copy code
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 1: Load the Iris dataset from seaborn
+iris = sns.load_dataset('iris')
+
+# Step 2: Extract the 'sepal_length' and 'petal_length' columns
+sepal_length = iris['sepal_length']
+petal_length = iris['petal_length']
+
+# Step 3: Create a scatter plot to visualize the correlation
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=sepal_length, y=petal_length, data=iris)
+
+# Add titles and labels
+plt.title('Scatter Plot: Sepal Length vs Petal Length')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Petal Length (cm)')
+plt.show()
+Explanation:
+Loading the Dataset:
+We use seaborn's load_dataset('iris') to directly load the Iris dataset, which contains data about various attributes of iris flowers, including sepal_length and petal_length.
+
+Extracting Columns:
+We extract the columns sepal_length and petal_length from the Iris dataset to focus only on these two features for our visualization.
+
+Creating the Scatter Plot:
+We use sns.scatterplot() to create a scatter plot where:
+
+x=sepal_length: The x-axis represents the sepal length.
+
+y=petal_length: The y-axis represents the petal length.
+
+data=iris: This tells Seaborn to use the Iris dataset.
+
+Adding Labels:
+We set the plot's title and label the axes to make the plot more informative.
+
+What to Expect in the Output:
+The scatter plot will show individual data points representing the relationship between the sepal length and petal length for each flower in the Iris dataset. You will likely see a positive correlation, meaning as the sepal length increases, the petal length also tends to increase. This is expected, as both of these features are related to the physical size of the flower.
+
+Sample Output:
+A scatter plot will appear with:
+
+The x-axis labeled as "Sepal Length (cm)".
+
+The y-axis labeled as "Petal Length (cm)".
+
+Data points scattered according to the respective values of sepal and petal lengths.
+
+---------------------------------------------------xxx-----------------------------------------------------------
+
+# Import necessary libraries
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# ------------------------------
+# 1. LOAD IRIS DATASET
+# ------------------------------
+
+# Load directly from seaborn's built-in datasets
+iris = sns.load_dataset("iris")
+
+# Show the first few rows
+print("📄 First 5 rows of the Iris dataset:")
+print(iris.head())
+
+# ------------------------------
+# 2. SCATTER PLOT: Sepal Length vs Petal Length
+# ------------------------------
+
+plt.figure(figsize=(8, 6))
+sns.scatterplot(data=iris, x='sepal_length', y='petal_length', hue='species', palette='Set2')
+plt.title('Scatter Plot: Sepal Length vs Petal Length')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Petal Length (cm)')
+plt.legend(title='Species')
+plt.tight_layout()
+plt.show()
