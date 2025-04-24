@@ -1,0 +1,143 @@
+ Theory Content: Data Cleaning and Storage
+Data Cleaning is a crucial step in preparing data for analysis. It involves preprocessing the raw data to ensure it's accurate, consistent, and formatted correctly for analysis.
+
+Steps typically include:
+
+Handling Missing Data: Removing or filling missing values.
+
+Filtering: Removing irrelevant data or outliers.
+
+Normalizing: Standardizing data to a common format (e.g., dates, text casing).
+
+Converting Data Types: Ensuring correct data types (e.g., integer, string, date).
+
+Data Storage refers to saving the cleaned data into a format that can be easily accessed and analyzed. Common options include:
+
+CSV Files: Simple and widely supported for small to medium datasets.
+
+Databases: For large-scale data storage and querying (e.g., SQLite, MySQL).
+
+JSON: For structured data like nested objects.
+
+2. Advantages and Disadvantages
+Advantages:
+Improved Data Quality: Clean data leads to more accurate analysis.
+
+Efficient Analysis: Well-structured data is easier to work with.
+
+Data Accessibility: Storing data in CSV or databases makes it easy to access and query.
+
+Disadvantages:
+Time-Consuming: Cleaning large datasets can take time.
+
+Complexity: Identifying and fixing issues like missing values or inconsistent formats can be tricky.
+
+Storage Requirements: Large datasets require adequate storage solutions.
+
+3. Implementation Steps (Data Cleaning & Storage)
+Preprocess the Data:
+
+Remove or Impute Missing Data.
+
+Normalize Text (convert to lowercase, remove special characters).
+
+Convert Data Types (e.g., converting string to date).
+
+Filter Unnecessary Data:
+
+Remove Outliers (e.g., unrealistic values for views or engagement).
+
+Select Relevant Columns for analysis (e.g., views, comments, date).
+
+Store the Cleaned Data:
+
+Save the data to a structured format like CSV or a Database.
+
+4. Pseudocode for Data Cleaning and Storage
+python
+Copy
+Edit
+import pandas as pd
+import numpy as np
+
+# Load data from CSV (or any other source)
+df = pd.read_csv('youtube_video_data.csv')
+
+# Step 1: Handle Missing Data
+df.fillna({'Views': 0, 'Comments': 'No Comments'}, inplace=True)  # Fill missing data with default values
+# Alternatively, drop rows with missing values:
+# df.dropna(subset=['Title', 'Views'], inplace=True)
+
+# Step 2: Normalize Text Data
+df['Title'] = df['Title'].str.lower()  # Convert title to lowercase
+df['Description'] = df['Description'].str.replace('[^a-zA-Z0-9\s]', '', regex=True)  # Remove special characters
+
+# Step 3: Convert Data Types
+df['Views'] = pd.to_numeric(df['Views'], errors='coerce')  # Convert Views to numeric, handle errors
+
+# Step 4: Filter Out Outliers
+df = df[df['Views'] > 100]  # Keep rows with views > 100
+
+# Step 5: Store the Cleaned Data
+df.to_csv('cleaned_youtube_data.csv', index=False)  # Save the cleaned data to a CSV file
+
+print("Data cleaned and stored successfully.")
+5. Considerations
+Data Consistency: Ensure all columns have consistent formats (e.g., numerical values, date formats).
+
+Handling Large Datasets: For large datasets, consider using a database (e.g., SQLite or MySQL) for storage instead of CSV files.
+
+Data Security: Ensure the stored data is protected, especially if it contains sensitive or personal information.
+
+-------------------------------------------------xxx---------------------------------------------------------------------------
+Code :
+
+import sqlite3
+import pandas as pd
+
+# Sample social media data
+data = [
+    {"username": "user1", "post": "Check out our new product! #launch", "likes": 120, "date": "2024-02-25"},
+    {"username": "user2", "post": "Loving the new design!", "likes": 85, "date": "2024-02-24"},
+    {"username": "user3", "post": "Not sure about the update @", "likes": 40, "date": "2024-02-23"},
+    {"username": "user1", "post": "Check out our new product! #launch", "likes": 120, "date": "2024-02-25"}
+]
+
+# Convert to Pandas DataFrame
+df = pd.DataFrame(data)
+
+# Data Cleaning: Remove duplicates, handle missing values
+df.drop_duplicates(inplace=True)
+df.dropna(inplace=True)
+
+# Connect to SQLite database
+conn = sqlite3.connect("social_media.db")
+cursor = conn.cursor()
+
+# Create table (if not exists)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    post TEXT,
+    likes INTEGER,
+    date TEXT
+)
+""")
+
+# Insert data into SQLite
+df.to_sql("posts", conn, if_exists="append", index=False)
+
+# Commit and close connection
+conn.commit()
+
+# Connect to the database and read data
+df_read = pd.read_sql("SELECT * FROM posts", conn)
+
+# Display the stored data
+print(df_read)
+
+# Close the connection
+conn.close()
+
+print("Data cleaned and stored successfully!")

@@ -1,0 +1,224 @@
+Theory Content: Exploratory Data Analysis (EDA) and Visualization
+Exploratory Data Analysis (EDA) is a crucial step in analyzing data before applying machine learning models. It helps to:
+
+Understand the structure of the data.
+
+Identify patterns and trends.
+
+Detect anomalies or outliers.
+
+Check assumptions required for further analysis.
+
+Visualization is the graphical representation of data that helps in identifying trends, correlations, and patterns. It allows businesses to:
+
+Track key metrics like engagement, views, and likes.
+
+Identify audience preferences by analyzing content performance.
+
+Visualize relationships between different variables (e.g., views vs. comments).
+
+Common visualization types:
+
+Histograms: Distribution of a single variable.
+
+Bar Charts: Comparison of categories (e.g., top videos).
+
+Scatter Plots: Relationship between two numerical variables.
+
+Box Plots: Distribution and outliers of a numerical variable.
+
+Heatmaps: Correlation between multiple variables.
+
+2. Advantages and Disadvantages
+Advantages:
+Data Insight: EDA helps understand the data and decide the next steps for analysis.
+
+Pattern Identification: Helps find hidden trends and patterns.
+
+Easy to Interpret: Visualizations make complex data more understandable for business stakeholders.
+
+Disadvantages:
+Time-Consuming: EDA can take significant time for large datasets.
+
+Over-Simplification: Simple visualizations might miss some nuances in the data.
+
+Bias: Visualizations might be misleading if not carefully designed.
+
+3. Implementation Steps (EDA and Visualization)
+Load and Clean the Data:
+
+Handle missing values, format issues, and irrelevant data.
+
+Ensure columns have the correct data types.
+
+Basic Statistical Summary:
+
+Use descriptive statistics (mean, median, standard deviation) to understand data distribution.
+
+Data Visualization:
+
+Create plots like histograms, bar charts, and scatter plots to understand data distributions and relationships.
+
+Identify Patterns and Trends:
+
+Visualize correlations and trends to gain insights into user behavior, content performance, etc.
+
+4. R Code for EDA and Visualization
+r
+Copy
+Edit
+# Load necessary libraries
+library(dplyr)      # For data manipulation
+library(ggplot2)    # For visualization
+library(viridis)    # For better color palettes
+library(corrplot)   # For correlation matrix visualization
+
+# Step 1: Load the data
+df <- read.csv('cleaned_youtube_data.csv')
+
+# Step 2: Basic Statistical Summary
+summary(df)  # Provides a quick statistical overview (mean, min, max, etc.)
+str(df)      # Check the structure and types of columns
+
+# Step 3: Visualize Distribution of Views
+ggplot(df, aes(x = Views)) +
+  geom_histogram(binwidth = 5000, fill = 'skyblue', color = 'black') +
+  labs(title = 'Distribution of Views', x = 'Views', y = 'Frequency') +
+  theme_minimal()
+
+# Step 4: Bar Plot - Top 10 Videos by Views
+top_videos <- df %>%
+  arrange(desc(Views)) %>%
+  head(10)
+
+ggplot(top_videos, aes(x = reorder(Title, Views), y = Views)) +
+  geom_bar(stat = 'identity', fill = 'orange') +
+  labs(title = 'Top 10 Videos by Views', x = 'Video Title', y = 'Views') +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Step 5: Scatter Plot - Views vs Comments
+ggplot(df, aes(x = Views, y = nchar(Comments))) + 
+  geom_point(color = 'darkblue', alpha = 0.5) +
+  labs(title = 'Views vs. Length of Comments', x = 'Views', y = 'Length of Comments') +
+  theme_minimal()
+
+# Step 6: Boxplot for Views (To detect outliers)
+ggplot(df, aes(x = '', y = Views)) + 
+  geom_boxplot(fill = 'green') +
+  labs(title = 'Boxplot of Views', x = '', y = 'Views')
+
+# Step 7: Correlation Matrix (For numerical columns)
+cor_matrix <- cor(df %>% select(Views, Likes, Dislikes))  # Select relevant numeric columns
+corrplot(cor_matrix, method = "circle", type = "upper", tl.col = "black", tl.cex = 0.8)
+
+# Step 8: Heatmap of Correlations (Alternative visualization)
+library(reshape2)
+cor_data <- melt(cor_matrix)
+ggplot(cor_data, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_viridis() +
+  theme_minimal() +
+  labs(title = 'Heatmap of Correlations', x = '', y = '')
+
+5. Key Insights from EDA and Visualization
+Distribution of Views: The histogram of views helps identify how most videos are performing—whether the views are evenly distributed or concentrated on a few top-performing videos.
+
+Top Videos: The bar chart visualizes the videos with the highest views, providing insights into which content resonates most with the audience.
+
+Views vs. Comments: The scatter plot shows the relationship between the number of views and comment length, which might indicate engagement levels.
+
+Outliers: Box plots help detect outliers (e.g., videos with unusually high or low views).
+
+Correlation: Correlation heatmaps or matrices help understand relationships between metrics like likes, dislikes, and views, which can help in identifying key factors driving video success.
+
+6. Considerations for Business
+Business Insights: Use EDA to understand what types of videos attract the most views, comments, and engagement. This can inform content strategy.
+
+Content Optimization: Visualizations can reveal which content performs well in terms of engagement, helping optimize future content creation.
+
+Audience Behavior: By analyzing comment length, views, and likes, businesses can understand audience preferences and tailor content accordingly.
+
+------------------------------------------------xxx----------------------------------------------------------------------------------
+
+Code :
+
+https://www.kaggle.com/datasets/bhadramohit/social-media-usage-datasetapplications
+
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('/content/social_media_usage.csv')
+
+# Inspect the first few rows
+print(df.head())
+
+# Get summary info about the dataset
+print(df.info())
+
+# Basic statistical summary
+print(df.describe())
+
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Drop rows with missing values (if any)
+df.dropna(inplace=True)
+
+# Ensure 'User_ID' is treated as a string (if it's not)
+df['User_ID'] = df['User_ID'].astype(str)
+
+# Convert 'App' to category type for easier analysis
+df['App'] = df['App'].astype('category')
+
+# If needed, ensure all numeric columns are in the correct format
+df['Daily_Minutes_Spent'] = pd.to_numeric(df['Daily_Minutes_Spent'], errors='coerce')
+df['Posts_Per_Day'] = pd.to_numeric(df['Posts_Per_Day'], errors='coerce')
+df['Likes_Per_Day'] = pd.to_numeric(df['Likes_Per_Day'], errors='coerce')
+df['Follows_Per_Day'] = pd.to_numeric(df['Follows_Per_Day'], errors='coerce')
+
+
+# Group by platform and compute average metrics
+platform_engagement = df.groupby('App')[['Daily_Minutes_Spent', 'Posts_Per_Day', 'Likes_Per_Day', 'Follows_Per_Day']].mean()
+
+# Display platform engagement
+print(platform_engagement)
+
+
+top_users_posts = df.groupby('User_ID')['Posts_Per_Day'].sum().nlargest(10)
+
+
+top_users_likes = df.groupby('User_ID')['Likes_Per_Day'].sum().nlargest(10)
+
+
+top_users_follows = df.groupby('User_ID')['Follows_Per_Day'].sum().nlargest(10)
+
+print(top_users_posts)
+print(top_users_likes)
+print(top_users_follows)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='App', y='Daily_Minutes_Spent', data=df)
+plt.title('Distribution of Daily Minutes Spent Across Platforms')
+plt.xticks(rotation=45)
+plt.show()
+
+# Plot engagement vs time spent for each platform
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Daily_Minutes_Spent', y='Likes_Per_Day', hue='App', data=df, palette='Set2')
+plt.title('Engagement (Likes) vs Time Spent on Social Media')
+plt.xlabel('Daily Minutes Spent')
+plt.ylabel('Likes Per Day')
+plt.show()
+
+# Visualize top platforms by average engagement
+avg_engagement = platform_engagement[['Likes_Per_Day', 'Posts_Per_Day', 'Follows_Per_Day']].mean(axis=1).sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=avg_engagement.index, y=avg_engagement.values, palette='viridis')
+plt.title('Average Engagement by Platform')
+plt.ylabel('Average Engagement (Likes, Posts, Follows)')
+plt.xticks(rotation=45)
+plt.show()

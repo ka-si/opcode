@@ -1,0 +1,73 @@
+Experiment 2: Study various Social Media Analytics Tools (Facebook Insights, Google Analytics, Netlytic, etc.)
+🎯 Aim:
+To study and understand different social media analytics tools used to extract, analyze, and visualize social media data.
+
+📚 Theory:
+Social Media Analytics Tools are platforms or software solutions that help analyze the performance, engagement, and reach of social media activities. These tools provide valuable insights into user behavior, content effectiveness, and marketing impact.
+
+Common Tools:
+
+Facebook Insights
+
+Built-in analytics for Facebook Pages.
+
+Tracks post reach, reactions, page views, demographics.
+
+Google Analytics
+
+Tracks social traffic to websites.
+
+Analyzes user behavior, bounce rate, conversions.
+
+Netlytic
+
+Analyzes text and social network data.
+
+Used for sentiment analysis and conversation tracking.
+
+Hootsuite Analytics
+
+Dashboard for managing multiple social accounts.
+
+Monitors performance of scheduled posts and engagement.
+
+Sprout Social
+
+End-to-end social media management tool.
+
+Tracks audience growth, campaign success, and sentiment.
+
+✅ Advantages:
+Provides data-driven decision-making support.
+
+Enables real-time monitoring of social activity.
+
+Helps identify audience preferences and trending content.
+
+Enhances brand performance tracking and ROI analysis.
+
+Saves time by providing automated reports and dashboards.
+
+⚠️ Disadvantages:
+May require paid subscriptions for full features.
+
+Some tools offer platform-specific data only.
+
+Requires technical skills to interpret complex metrics.
+
+Privacy and compliance concerns when handling user data.
+
+🚀 Applications:
+Marketing performance analysis (e.g., campaign reach and engagement).
+
+Audience segmentation and targeting based on demographics.
+
+Reputation management through sentiment tracking.
+
+Competitor analysis and benchmarking.
+
+Customer support optimization via response time and interaction metrics.
+
+📌 Conclusion:
+Social Media Analytics Tools play a vital role in understanding the effectiveness of digital strategies. By leveraging tools like Facebook Insights or Google Analytics, businesses can measure success, optimize content, and make informed decisions for better outreach.
+

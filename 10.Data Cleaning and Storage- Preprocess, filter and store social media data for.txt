@@ -1,0 +1,155 @@
+ Theory Content: Data Cleaning and Storage in R
+Data Cleaning involves preprocessing raw data to ensure it’s in the right format for analysis. This includes:
+
+Handling Missing Data: Removing or imputing missing values.
+
+Filtering: Removing irrelevant data or outliers.
+
+Normalization: Standardizing data formats (e.g., text casing, date formats).
+
+Data Type Conversion: Ensuring data types are correct (e.g., dates, numbers).
+
+Data Storage refers to saving cleaned data in a format suitable for future analysis. Common storage options include:
+
+CSV Files: Simple, easily accessible.
+
+Databases: Used for large-scale data storage (e.g., SQLite, MySQL).
+
+RData/Feather Files: Used within R for faster loading and saving of large datasets.
+
+2. Advantages and Disadvantages
+Advantages:
+High-Quality Data: Cleaned data ensures accurate analysis and insights.
+
+Better Analysis: Clean and structured data is easier to analyze.
+
+Data Accessibility: Storing in CSV or databases makes future access easy.
+
+Disadvantages:
+Time-Consuming: Data cleaning can be slow, especially for large datasets.
+
+Complexity: Identifying and fixing errors in raw data can be challenging.
+
+Storage Overhead: Large datasets require significant storage space.
+
+3. Implementation Steps (Data Cleaning & Storage in R)
+Preprocess the Data:
+
+Handle missing data (e.g., imputation or removal).
+
+Normalize or clean textual data (e.g., remove special characters).
+
+Convert data types (e.g., dates, numeric values).
+
+Filter the Data:
+
+Remove irrelevant rows or outliers.
+
+Select only the necessary columns for business analysis.
+
+Store the Cleaned Data:
+
+Save the cleaned data to a structured format (CSV, RData, or database).
+
+4. R Code Example for Data Cleaning and Storage
+r
+Copy
+Edit
+# Load necessary libraries
+library(dplyr)  # For data manipulation
+library(tidyr)  # For handling missing data
+library(stringr) # For text manipulation
+
+# Step 1: Load the data
+df <- read.csv('youtube_video_data.csv')
+
+# Step 2: Handle Missing Data
+df <- df %>%
+  mutate(Views = ifelse(is.na(Views), 0, Views),  # Fill NA views with 0
+         Comments = ifelse(is.na(Comments), "No Comments", Comments))  # Fill NA comments
+
+# Step 3: Normalize Text Data
+df$Title <- tolower(df$Title)  # Convert titles to lowercase
+df$Description <- str_replace_all(df$Description, "[^[:alnum:][:space:]]", "")  # Remove special characters
+
+# Step 4: Convert Data Types
+df$Views <- as.numeric(df$Views)  # Convert Views to numeric
+df$Date <- as.Date(df$Date, format="%Y-%m-%d")  # Convert Date to Date format
+
+# Step 5: Filter Out Outliers
+df <- df %>% filter(Views > 100)  # Keep rows with views greater than 100
+
+# Step 6: Store the Cleaned Data
+write.csv(df, 'cleaned_youtube_data.csv', row.names = FALSE)  # Save the cleaned data as CSV
+
+# Optional: Save data as RData for faster load in future
+save(df, file = 'cleaned_youtube_data.RData')
+
+print("Data cleaned and stored successfully.")
+5. Considerations
+Data Consistency: Ensure that all columns have consistent formats (e.g., numeric for views, date for timestamps).
+
+Large Datasets: For very large datasets, consider using SQLite or a similar database to store the data, especially if it’s too large for CSV.
+
+Data Integrity: Always validate that the data is cleaned correctly and that no relevant information has been lost during the cleaning process.
+
+----------------------------------------------xxx------------------------------------------------------------
+COde :
+
+# Install R and rpy2
+!sudo apt-get install -y r-base
+!pip install rpy2
+
+# Load the rpy2 extension for R support in Python
+%load_ext rpy2.ipython
+
+%%R
+# Install the required R packages
+install.packages("RSQLite")
+install.packages("dplyr")
+
+%%R
+# Load necessary libraries
+library(RSQLite)
+library(dplyr)
+
+# Sample social media data
+data <- data.frame(
+  username = c("user1", "user2", "user3", "user1"),
+  post = c("Check out our new product! #launch", "Loving the new design!", "Not sure about the update @", "Check out our new product! #launch"),
+  likes = c(120, 85, 40, 120),
+  date = c("2024-02-25", "2024-02-24", "2024-02-23", "2024-02-25")
+)
+
+# Data Cleaning: Remove duplicates and handle missing values
+data <- data %>%
+  distinct() %>%
+  na.omit()
+
+# Connect to SQLite database
+conn <- dbConnect(RSQLite::SQLite(), "social_media.db")
+
+# Create table if it does not exist
+dbExecute(conn, "
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT,
+  post TEXT,
+  likes INTEGER,
+  date TEXT
+)
+")
+
+# Insert data into SQLite database
+dbWriteTable(conn, "posts", data, append = TRUE, row.names = FALSE)
+
+# Read the data from the SQLite database
+df_read <- dbGetQuery(conn, "SELECT * FROM posts")
+
+# Display the stored data
+print(df_read)
+
+# Close the connection to the database
+dbDisconnect(conn)
+
+cat("Data cleaned and stored successfully!")

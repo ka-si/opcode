@@ -1,0 +1,79 @@
+Experiment 4: Data Collection – Twitter
+🎯 Aim:
+To collect and understand how data from Twitter can be gathered using techniques such as scraping, crawling, and parsing for analysis in social media analytics.
+
+📚 Theory:
+Twitter is a major social networking platform where users post short messages (tweets). It serves as a rich data source for sentiment analysis, trend forecasting, and public opinion mining.
+
+To extract this data, three core techniques are used:
+
+Scraping:
+Extracts content directly from the Twitter website or its HTML structure using tools like BeautifulSoup or Selenium.
+
+Crawling:
+Automatically navigates through web pages or user timelines to gather large amounts of data in a structured way.
+
+Parsing:
+Converts the raw data (HTML or JSON) into a usable format (like CSV or DataFrames) for further analysis.
+
+Twitter API vs Scraping:
+
+The Twitter API is the official way to access tweet data, allowing developers to query tweets, users, timelines, etc.
+
+Scraping is often used when APIs are limited or unavailable, but it must comply with ethical guidelines and platform policies.
+
+Common tools/libraries:
+
+Tweepy (Python library for Twitter API)
+
+BeautifulSoup/Scrapy (for scraping)
+
+Pandas/JSON (for parsing and structuring)
+
+Typical data collected includes:
+
+Tweet text
+
+Hashtags
+
+Mentions
+
+Timestamp
+
+User location
+
+Number of likes/retweets
+
+✅ Advantages:
+Provides access to real-time and historical data.
+
+Offers insights into public sentiment, opinions, and behaviors.
+
+Enables event detection and monitoring.
+
+Helps businesses and researchers perform brand analysis and market research.
+
+Useful in training machine learning models for NLP tasks.
+
+⚠️ Disadvantages:
+API rate limits may restrict data access for large-scale analysis.
+
+Ethical concerns and privacy issues when scraping user data without consent.
+
+Presence of spam, bots, or fake accounts may introduce noise in analysis.
+
+Requires technical knowledge of APIs, scraping frameworks, and data preprocessing.
+
+🚀 Applications:
+Brand monitoring: Track what users are saying about a company or product.
+
+Sentiment analysis: Understand public mood during product launches or political events.
+
+Disaster management: Analyze real-time tweets during crises (e.g., floods, earthquakes).
+
+Trend forecasting: Detect trending hashtags or topics.
+
+Customer feedback mining: Gather unfiltered opinions about products/services.
+
+📌 Conclusion:
+Twitter provides a valuable source of public and real-time data that can be harnessed using scraping, crawling, and parsing. These techniques enable organizations to extract meaningful insights that influence strategic decisions, enhance customer understanding, and monitor public sentiment dynamically. While rich in potential, responsible data collection respecting privacy and ethical norms is essential.

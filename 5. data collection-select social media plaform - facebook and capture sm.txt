@@ -1,0 +1,46 @@
+
+Aim
+To collect data from the Facebook platform and capture social media data for business using scraping, crawling, and parsing techniques.
+
+Theory
+Social media data collection from platforms like Facebook is a common practice in business intelligence and analytics. Through scraping, crawling, and parsing, businesses can extract public information from pages and analyze it to understand trends, customer behavior, and brand perception.
+
+Scraping:
+Extracting specific information from web pages using code (e.g., post text, likes, comments).
+
+Crawling:
+Automatically browsing and collecting content across multiple pages or profiles.
+
+Parsing:
+Transforming unstructured web data into structured formats (like CSV or JSON) for analysis.
+
+Advantages:
+Real-time insights: Monitor current trends, reactions, and public sentiment.
+
+Competitor analysis: Understand how competitors engage with users.
+
+Marketing performance: Track the effectiveness of posts and campaigns.
+
+Audience behavior: Learn what content resonates most with target groups.
+
+Disadvantages:
+API limitations: Facebook’s Graph API restricts data access for privacy.
+
+Access tokens: Required for most API interactions and expire frequently.
+
+Rate limits: Only a limited number of requests are allowed per time period.
+
+Legal constraints: Unauthorized scraping may violate platform policies or legal terms.
+
+Applications:
+Brand health monitoring: Gauge public sentiment and reaction.
+
+Customer feedback mining: Analyze comments and posts for pain points.
+
+Trend detection: Discover viral topics in a niche.
+
+Content strategy: Plan posts based on engagement metrics.
+
+Conclusion
+Facebook data scraping provides valuable insights into customer opinions and content performance. Despite technical and legal limitations, this method plays a key role in social media analytics for business when used responsibly and ethically. APIs should be used wherever possible to comply with platform guidelines.
+

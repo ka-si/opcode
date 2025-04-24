@@ -1,0 +1,131 @@
+Theory Content: Data Collection from YouTube
+Social Media Analytics involves collecting data from platforms like YouTube to gain insights into user behavior, trends, and engagement. This can be done through:
+
+Web Scraping: Extracting data from YouTube using scripts.
+
+Crawling: Automatically browsing YouTube pages to gather links or resources.
+
+Parsing: Structuring the raw HTML data into usable formats (like JSON or CSV).
+
+2. Advantages and Disadvantages
+Advantages:
+Cost-Effective: Low cost for data collection.
+
+Real-Time Data: Collect data as it happens.
+
+Customizable: Tailor the data to specific needs.
+
+Disadvantages:
+Legal Issues: Scraping can violate YouTube’s terms.
+
+Data Noise: Scraped data might need cleaning.
+
+Access Limits: YouTube API and scraping may be rate-limited.
+
+Technical Complexity: Requires knowledge of web scraping and handling dynamic content.
+
+3. Implementation Steps
+Set up environment: Install libraries:
+
+bash
+Copy
+Edit
+pip install requests beautifulsoup4 pandas selenium
+Send request and fetch HTML: Use requests to fetch YouTube page HTML.
+
+Parse HTML: Use BeautifulSoup to extract data like video title, views, and description.
+
+Store Data: Save collected data in a structured format (CSV, database).
+
+4. Pseudocode for Data Collection
+python
+Copy
+Edit
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+url = "https://www.youtube.com/watch?v=VIDEO_ID"
+response = requests.get(url)
+
+soup = BeautifulSoup(response.text, 'html.parser')
+
+title = soup.find('h1', {'class': 'title'}).text.strip()
+views = soup.find('span', {'class': 'view-count'}).text.strip()
+description = soup.find('yt-formatted-string', {'class': 'content'}).text.strip()
+
+comments = [comment.text.strip() for comment in soup.find_all('yt-formatted-string', {'id': 'content-text'})]
+
+data = {
+    'Title': title,
+    'Views': views,
+    'Description': description,
+    'Comments': comments
+}
+
+df = pd.DataFrame(data)
+df.to_csv('youtube_video_data.csv', index=False)
+
+print("Data collected and saved.")
+5. Considerations
+Ensure compliance with YouTube's terms.
+
+Be mindful of rate limits and potential IP blocking.
+
+Use the YouTube Data API for legal, efficient data collection.
+
+--------------------------------------xxx---------------------------------------------------------------------------------
+Code : 
+
+pip install google-api-python-client
+
+from googleapiclient.discovery import build
+import csv
+
+# 🔑 Your YouTube API Key (Replace with your actual key)
+API_KEY = "AIzaSyAveDJAWozBsTsMhS5US65uofiNB-kWybA"
+
+# List of YouTube video URLs
+video_urls = [
+    "https://www.youtube.com/watch?v=2-n7QZMmzn4",
+    "https://www.youtube.com/watch?v=djsD5_kHcl8"
+]
+
+# Extract video IDs from URLs
+video_ids = [url.split("v=")[-1] for url in video_urls]
+
+# Initialize the YouTube API client
+youtube = build("youtube", "v3", developerKey=API_KEY)
+
+# Open CSV file to store video details
+with open("youtube_data.csv", "w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerow(["Title", "Uploader", "Views", "Likes", "Description"])
+
+    for video_id in video_ids:
+        try:
+            # Fetch video details
+            response = youtube.videos().list(
+                part="snippet,statistics",
+                id=video_id
+            ).execute()
+
+            # Extract required details
+            if "items" in response and len(response["items"]) > 0:
+                video = response["items"][0]
+                title = video["snippet"]["title"]
+                uploader = video["snippet"]["channelTitle"]
+                views = video["statistics"].get("viewCount", "N/A")
+                likes = video["statistics"].get("likeCount", "N/A")
+                description = video["snippet"]["description"][:200]  # Trim description
+
+                writer.writerow([title, uploader, views, likes, description])
+                print(f"✅ Extracted: {title}")
+            else:
+                print(f"❌ Video not found: {video_id}")
+
+        except Exception as e:
+            print(f"❌ Error processing {video_id}: {e}")
+
+print("🎉 Data saved to youtube_data.csv")
+
